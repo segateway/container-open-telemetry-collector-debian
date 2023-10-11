@@ -70,7 +70,9 @@ jobs:
         package:
           - otelcol
           - otelcol-contrib
-
+        aptlist:
+          - base
+          - journald
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -99,6 +101,7 @@ jobs:
           build-args: |
             OTEL_BUILD=${{ matrix.version }}
             OTEL_PACKAGE=${{ matrix.package }}
+            PACKAGES==${{ matrix.aptlist }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.DOCKER_REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       - name: Export digest
@@ -168,6 +171,9 @@ jobs:
         package:
           - otelcol
           - otelcol-contrib
+        aptlist:
+          - base
+          - journald
 
     steps:
       - name: Download digests
@@ -184,7 +190,7 @@ jobs:
           images: ${{ env.DOCKER_REGISTRY_IMAGE }}
           flavor: |
             latest=false
-            prefix=${{ matrix.version }}-${{ matrix.package }}-
+            prefix=${{ matrix.version }}-${{ matrix.package }}-${{ matrix.aptlist }}-
           tags: |
             type=sha,format=long
             type=sha
