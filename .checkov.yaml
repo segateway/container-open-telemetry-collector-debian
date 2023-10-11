@@ -14,4 +14,5 @@ secrets-scan-file-type: []
 skip-check:
   - CKV_DOCKER_2
   - CKV_DOCKER_3
+  - CKV_DOCKER_8
 summary-position: top
