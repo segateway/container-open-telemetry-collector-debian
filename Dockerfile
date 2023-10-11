@@ -16,7 +16,8 @@ RUN apt-get update -y;\
     apt-get remove -y wget;\
     apt-get autoremove -y ;\
     apt-get clean ;\
-    rm -rf /var/lib/apt/lists/* ; rm -rf /tmp/*
+    rm -rf /var/lib/apt/lists/* ; rm -rf /tmp/* ;\
+    if command -v otelcol-contrib ;then ln -s /bin/otelcol-contrib /bin/otelcol ; fi
 # hadolint ignore=DL3002
 USER root
 ENTRYPOINT ["otelcol"]
