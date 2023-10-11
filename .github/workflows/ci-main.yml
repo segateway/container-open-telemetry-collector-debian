@@ -184,7 +184,7 @@ jobs:
           images: ${{ env.DOCKER_REGISTRY_IMAGE }}
           flavor: |
             latest=false
-            prefix=${{ matrix.version }}_${{ matrix.package }}
+            prefix=${{ matrix.version }}-${{ matrix.package }}-
           tags: |
             type=sha,format=long
             type=sha
