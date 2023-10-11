@@ -101,14 +101,14 @@ jobs:
           build-args: |
             OTEL_BUILD=${{ matrix.version }}
             OTEL_PACKAGE=${{ matrix.package }}
-            PACKAGES==${{ matrix.aptlist }}
+            PACKAGES=${{ matrix.aptlist }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.DOCKER_REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       - name: Export digest
         run: |
-          mkdir -p /tmp/digests
+          mkdir -p /tmp/digests/${{ matrix.version }}-${{ matrix.package }}-${{ matrix.aptlist }}
           digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"          
+          touch "/tmp/digests/${{ matrix.version }}-${{ matrix.package }}-${{ matrix.aptlist }}/${digest#sha256:}"          
       - name: Upload digest
         uses: actions/upload-artifact@v3
         with:
@@ -207,7 +207,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}          
       - name: Create manifest list and push
-        working-directory: /tmp/digests
+        working-directory: /tmp/digests/${{ matrix.version }}-${{ matrix.package }}-${{ matrix.aptlist }}
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf '${{ env.DOCKER_REGISTRY_IMAGE }}@sha256:%s ' *)          
